@@ -1,0 +1,11 @@
+12c00000-12d00000 rw-p 00000000 00:05 26550                              /dev/ashmem/dalvik-main space (region space) (deleted)
+12d00000-13040000 ---p 00100000 00:05 26550                              /dev/ashmem/dalvik-main space (region space) (deleted)
+6f181000-6f3a6000 rw-p 00000000 fd:01 221                                /data/dalvik-cache/arm/system@framework@boot.art
+6f3a6000-6f3bc000 r--p 00225000 fd:01 221                                /data/dalvik-cache/arm/system@framework@boot.art
+6f3bc000-6f4b3000 rw-p 00000000 fd:01 229                                /data/dalvik-cache/arm/system@framework@boot-core-libart.art
+6f4b3000-6f4c5000 r--p 000f7000 fd:01 229                                /data/dalvik-cache/arm/system@framework@boot-core-libart.art
+6f4c5000-6f4f6000 rw-p 00000000 fd:01 232                                /data/dalvik-cache/arm/system@framework@boot-conscrypt.art
+6f4f6000-6f4f9000 r--p 00031000 fd:01 232                                /data/dalvik-cache/arm/system@framework@boot-conscrypt.art
+7e0c89a000-7e0c89b000 ---p 00000000 00:00 0 
+7e0c89b000-7e0c89c000 ---p 00000000 00:00 0 
+7e0c89c000-7e0c9a0000 rw-p 00000000 00:00 0 

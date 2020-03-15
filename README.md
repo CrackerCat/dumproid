@@ -1,7 +1,7 @@
 # Dumproid
 
 [![GitHub release](https://img.shields.io/github/v/release/tkmru/dumproid.svg)](https://github.com/tkmru/dumproid/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/tkmru/dumproid/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/tkmru/dumproid/blob/master/LICENSE.md)
 ![](https://github.com/tkmru/dumproid/workflows/test/badge.svg)
 
 Dumproid is Android process memory dump tool without ndk.
@@ -27,7 +27,7 @@ $ adb push dumproid /data/local/tmp/dumproid
 
 ### Start-up
 
-When the target app is not debuggable and android is rooted:
+When android device is rooted:
 
 ```
 $ adb shell
@@ -42,7 +42,7 @@ $ su
 ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝╚═════╝
 ```
 
-When the target app is debuggable and android is not rooted:
+When the target app is debuggable and android device is not rooted:
 
 ```
 $ adb shell
@@ -98,7 +98,7 @@ $ adb pull /data/local/tmp/20200315194818
 
 #### Print hexdump
 
-Use the dump option to display memory like a hexdump.
+Use the dump option to display memory like a `hexdump`.
 
 ```
 sargo:/ # /data/local/tmp/dumproid -q -p 24264 -a 0xf0c9e000 --dump                                                                                                         

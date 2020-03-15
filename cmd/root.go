@@ -9,19 +9,20 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+
+	"github.com/tkmru/dumproid/pkg/memory"
 )
 
 // Used for flags.
 var (
 	readAddress int64
-	size int64
-	hexdump bool
-	memorymap bool
-	quiet bool
-	pid string
-	permission string
-	outputPath string
-	targetProcess string
+	size        int64
+	hexdump     bool
+	memorymap   bool
+	quiet       bool
+	pid         string
+	permission  string
+	outputPath  string
 )
 
 var rootCmd = &cobra.Command{
@@ -31,7 +32,7 @@ var rootCmd = &cobra.Command{
 		if !quiet {
 			asciiArt()
 		}
-		
+
 		if pid == "" {
 			parsedPid, err := getPID()
 			if err != nil {
@@ -42,31 +43,30 @@ var rootCmd = &cobra.Command{
 		}
 
 		if memorymap {
-			displayMemoryMap(pid)
+			memory.DisplayMemoryMap(pid, permission)
 			os.Exit(0)
 		}
 
 		if hexdump {
 			if readAddress != 0 {
-				displayMemoryBytes(pid, readAddress, size)
+				memory.DisplayMemoryBytes(pid, readAddress, size)
 				os.Exit(0)
-			}	
+			}
 		}
 
-		dumpToFile(pid, permission, targetProcess, outputPath)
+		memory.DumpToFile(pid, permission, outputPath)
 	},
 }
 
 func init() {
 	rootCmd.Flags().Int64VarP(&readAddress, "address", "a", 0, "begin address of target memory")
-	rootCmd.Flags().Int64VarP(&size, "number", "n", 0x10, "number of bytes")
+	rootCmd.Flags().Int64VarP(&size, "number", "n", 0x100, "number of bytes")
 	rootCmd.Flags().BoolVarP(&memorymap, "maps", "m", false, "output memory mapping")
 	rootCmd.Flags().BoolVarP(&hexdump, "dump", "d", false, "output hexdump memory")
-	rootCmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "output hexdump memory")
+	rootCmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Do not print messages")
 	rootCmd.Flags().StringVarP(&outputPath, "output", "o", "/data/local/tmp", "output path")
 	rootCmd.Flags().StringVarP(&permission, "filter", "f", "", "")
 	rootCmd.Flags().StringVarP(&pid, "pid", "p", "", "target app's pid")
-	rootCmd.Flags().StringVarP(&targetProcess, "target", "t", "", "target process name")
 }
 
 func Execute() {
@@ -85,7 +85,7 @@ func asciiArt() {
 ██████╔╝╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║╚██████╔╝██║██████╔╝
 ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝╚═════╝
 `
-	fmt.Println(art) 
+	fmt.Println(art)
 }
 
 func getPID() (string, error) {

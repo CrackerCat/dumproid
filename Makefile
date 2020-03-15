@@ -7,7 +7,7 @@ DEVICES:=$(shell adb devices | grep -c 'device$$')
 all: build deploy
 
 test:
-	$(GOTEST) ./cmd
+	$(GOTEST) ./pkg/*
 
 build:
 	GOOS=linux GOARCH=arm64 GOARM=7 $(GOBUILD) -o $(BINARY_NAME)

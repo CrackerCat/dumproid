@@ -1,4 +1,4 @@
-package cmd
+package memory
 
 import (
 	"os"
@@ -22,9 +22,9 @@ func TestReadMemory(t *testing.T) {
 func TestFilterMemoryMap(t *testing.T) {
 	memoryMaps, _ := filterMemoryMap("testdata/proc_test_maps", "rw-p")
 	expectedAddrs := []string{"12c00000", "6f181000", "6f3bc000", "6f4c5000", "7e0c89c000"}
-	expectedPaths := []string{"/dev/ashmem/dalvik-main space (region space) (deleted)", 
-		"/data/dalvik-cache/arm/system@framework@boot.art", 
-		"/data/dalvik-cache/arm/system@framework@boot-core-libart.art", 
+	expectedPaths := []string{"/dev/ashmem/dalvik-main space (region space) (deleted)",
+		"/data/dalvik-cache/arm/system@framework@boot.art",
+		"/data/dalvik-cache/arm/system@framework@boot-core-libart.art",
 		"/data/dalvik-cache/arm/system@framework@boot-conscrypt.art",
 		"",
 	}

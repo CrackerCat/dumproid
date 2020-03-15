@@ -1,12 +1,12 @@
-package cmd
+package memory
 
 import (
 	"bufio"
 	"encoding/hex"
-	"path/filepath"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -16,7 +16,7 @@ import (
 type memoryMap struct {
 	beginAddr int64
 	endAddr   int64
-    path      string
+	path      string
 }
 
 var splitSize = 0x50000000
@@ -26,17 +26,22 @@ var bufferPool = sync.Pool{
 	},
 }
 
-func displayMemoryMap(pid string) error {
+func DisplayMemoryMap(pid string, filter string) error {
 	mapsPath := fmt.Sprintf("/proc/%s/maps", pid)
 	file, err := os.Open(mapsPath)
 	if err != nil {
 		return err
 	}
 
-    scanner := bufio.NewScanner(file)
-    for scanner.Scan() {
-        fmt.Println(scanner.Text())
-    }
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		meminfo := strings.Fields(line)
+		permission := meminfo[1]
+		if permission == filter {
+			fmt.Println(scanner.Text())
+		}
+	}
 	return nil
 }
 
@@ -72,7 +77,7 @@ func filterMemoryMap(mapsPath string, filter string) ([]memoryMap, error) {
 	return memoryMaps, nil
 }
 
-func displayMemoryBytes(pid string, beginAddress int64, size int64) error {
+func DisplayMemoryBytes(pid string, beginAddress int64, size int64) error {
 	memPath := fmt.Sprintf("/proc/%s/mem", pid)
 	memFile, _ := os.Open(memPath)
 	defer memFile.Close()
@@ -83,17 +88,18 @@ func displayMemoryBytes(pid string, beginAddress int64, size int64) error {
 	return nil
 }
 
-func dumpToFile(pid string, permission string, targetFile string, outputPath string) error {
+func DumpToFile(pid string, permission string, outputPath string) error {
 	t := time.Now()
 	outputDir := filepath.Join(outputPath, t.Format("20060102150405"))
 	if err := os.Mkdir(outputDir, 0777); err != nil {
-        return err
+		return err
 	}
+	fmt.Printf("Output Dir: %s\n", outputDir)
 
 	mapsPath := fmt.Sprintf("/proc/%s/maps", pid)
 	memoryMaps, err := filterMemoryMap(mapsPath, permission)
 	if err != nil {
-        return err
+		return err
 	}
 
 	memPath := fmt.Sprintf("/proc/%s/mem", pid)
@@ -103,6 +109,11 @@ func dumpToFile(pid string, permission string, targetFile string, outputPath str
 	for _, v := range memoryMaps {
 		memSize := v.endAddr - v.beginAddr
 		dumpFileName := fmt.Sprintf("%x-%x_%s", v.beginAddr, v.endAddr, v.path)
+		dumpFileName = strings.Replace(dumpFileName, "/", "_", -1)
+		dumpFileName = strings.Replace(dumpFileName, " ", "_", -1)
+		dumpPath := filepath.Join(outputDir, dumpFileName)
+		fmt.Printf("  Dump File: %s\n", dumpFileName)
+
 		for i := 0; i < (int(memSize)/splitSize)+1; i++ {
 			splitIndex := int64((i + 1) * splitSize)
 			splittedBeginAddr := v.beginAddr + int64(i*splitSize)
@@ -113,10 +124,10 @@ func dumpToFile(pid string, permission string, targetFile string, outputPath str
 			splittedMemSize := (splittedEndAddr - splittedBeginAddr)
 			b := bufferPool.Get().([]byte)[:splittedMemSize]
 			memory := readMemory(memFile, b, splittedBeginAddr, splittedMemSize)
-			
-			dumpPath := filepath.Join(outputDir, dumpFileName)
+
 			dumpFile, err := os.OpenFile(dumpPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 			if err != nil {
+				fmt.Println(err)
 				return err
 			}
 			defer dumpFile.Close()
@@ -127,7 +138,7 @@ func dumpToFile(pid string, permission string, targetFile string, outputPath str
 	return nil
 }
 
-func readMemory(memFile *os.File, buffer []byte, beginAddress int64, size int64) ([]byte) {
+func readMemory(memFile *os.File, buffer []byte, beginAddress int64, size int64) []byte {
 	r := io.NewSectionReader(memFile, beginAddress, size)
 	r.Read(buffer)
 	return buffer

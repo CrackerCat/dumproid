@@ -1,6 +1,7 @@
 # Dumproid
 
-Android process memory dump tool without ndk.
+Dumproid is Android process memory dump tool without ndk.
+It is dumping memory from `/proc/<pid>/mem`.
 
 ## How to Build
 After the build is complete, if adb is connected, place the built binary in `/data/local/tmp/` on Android.
@@ -57,6 +58,9 @@ $ pm list packages # to check <target-package-name>
 ### Dump memory
 #### Dump To File
 
+Permissions like `rwxs` can be specified as a filter.
+By default, files are dumped under `/data/local/tmp/`.
+
 ```
 sargo:/ # /data/local/tmp/dumproid -q -p 24264 --filter rw-p 
 Output Dir: /data/local/tmp/20200315194818
@@ -81,7 +85,7 @@ Output Dir: /data/local/tmp/20200315194818
   Dump File: 707e5000-707e6000__system_framework_arm_boot.oat
 ```
 
-
+Transfer dumped files to your PC using `adb pull`:
 
 ```
 $ adb pull /data/local/tmp/20200315194818 
@@ -89,6 +93,8 @@ $ adb pull /data/local/tmp/20200315194818
 ```
 
 #### Print hexdump
+
+Use the dump option to display memory like a hexdump.
 
 ```
 sargo:/ # /data/local/tmp/dumproid -q -p 24264 -a 0xf0c9e000 --dump                                                                                                         
@@ -111,6 +117,8 @@ sargo:/ # /data/local/tmp/dumproid -q -p 24264 -a 0xf0c9e000 --dump
 ```
 
 ### Check memory mapping
+
+Use the maps option to display memory mapping.
 
 ```
 sargo:/ # /data/local/tmp/dumproid -q -p 24264 --maps --filter rw-p                                                                                                         

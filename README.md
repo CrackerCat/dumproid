@@ -1,5 +1,9 @@
 # Dumproid
 
+[![GitHub release](https://img.shields.io/github/v/release/tkmru/dumproid.svg)](https://github.com/tkmru/dumproid/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/tkmru/dumproid/blob/master/LICENSE)
+![](https://github.com/tkmru/dumproid/workflows/test/badge.svg)
+
 Dumproid is Android process memory dump tool without ndk.
 It is dumping memory from `/proc/<pid>/mem`.
 

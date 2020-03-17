@@ -7,7 +7,16 @@
 Dumproid is Android process memory dump tool without ndk.
 It is dumping memory from `/proc/<pid>/mem`.
 
-## How to Build
+## Installation
+
+Download the binary from [GitHub Releases](https://github.com/tkmru/dumproid/releases/) and push it to android using adb.
+
+```
+$ adb push dumproid /data/local/tmp/dumproid
+```
+
+### How to Build
+You need Go 1.13 compiler.
 After the build is complete, if adb is connected, place the built binary in `/data/local/tmp/` on Android.
 
 ```
@@ -18,13 +27,6 @@ dumproid: 1 file pushed. 24.1 MB/s (4977746 bytes in 0.197s)
 ```
 
 ## Usage
-
-Push dumproid to android using adb.
-
-```
-$ adb push dumproid /data/local/tmp/dumproid
-```
-
 ### Start-up
 
 When android device is rooted:
@@ -32,7 +34,7 @@ When android device is rooted:
 ```
 $ adb shell
 $ su
-# /data/local/tmp/dumproid -p <PID>
+# /data/local/tmp/dumproid -p <PID> <some option>
                
 ██████╗ ██╗   ██╗███╗   ███╗██████╗ ██████╗  ██████╗ ██╗██████╗
 ██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔══██╗██╔═══██╗██║██╔══██╗
@@ -49,7 +51,7 @@ $ adb shell
 $ pm list packages # to check <target-package-name>
 # run-as <target-package-name>
 # cp /data/local/tmp/dumproid ./dumproid
-# ./dumproid
+# ./dumproid <some option>
                
 ██████╗ ██╗   ██╗███╗   ███╗██████╗ ██████╗  ██████╗ ██╗██████╗
 ██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔══██╗██╔═══██╗██║██╔══██╗
